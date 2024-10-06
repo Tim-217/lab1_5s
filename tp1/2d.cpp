@@ -1,0 +1,190 @@
+#include "2d.h"
+#include <conio.h>
+#include <windows.h>
+
+figur2d::figur2d() :type(""), a(0), b(0), c(0), S(0) { cout << "Вызван конструктор без параметров для класса figur2d\n"; };
+figur2d::figur2d(const string& t, const float& a1, const float& b1, const float& c1, const float& S1) :type(t), a(a1), b(b1), c(c1), S(S1){
+	cout << "Вызван конструктор с параметрами для класса figur2d\n";
+}
+figur2d::figur2d(const figur2d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), S(tmp.S) { 
+	cout << "Вызван конструктор копирования для класса figur2d\n"; 
+}
+figur2d::~figur2d() { cout << "Вызван деструктор  для класса figur2d\n"; }
+
+void figur2d::set_type2d(string t) {
+	this->type = t;
+}
+
+void figur2d::set_sizes2d(float a1, float b1, float c1) {
+	float s;
+	if (a1 > 0 && b1 == 0 && c1 == 0) {
+		this->type = "Круг"; 
+		s = 3.14 * a1 * a1;
+		this->set_S(s);
+		this->a = a1;
+		this->b = b1;
+		this->c = c1;
+	}	
+	else if (a1 > 0 && b1 > 0 && c1 == 0) { 
+		this->type = "Прямоугольник"; 
+		s = a1 * b1;
+		this->set_S(s);
+		this->a = a1;
+		this->b = b1;
+		this->c = c1;
+	}
+	else if (a1 > 0 && b1 > 0 && c1 > 0) { 
+		this->type = "Прямоугольный треугольник";
+		s = (a*b)/2;
+		this->set_S(s);
+		float d = 0.001;
+		float c2 = sqrt(b1 * b1 + a1 * a1);
+		if (abs(c2 - c1) < d) {
+			cout << "Всё верно" << endl;
+			this->a = a1;
+			this->b = b1;
+			this->c = c1;
+		}
+		else
+		{
+			cout << "Обнаружена ошибка. Параметр одной из сторон был исправлен." << endl;
+			this->a = a1;
+			this->b = b1;
+			this->c = c2;
+		}
+	}		
+	else {
+		cout << "Провертье введённые параметры." << endl;
+	}
+}
+void figur2d::set_S(float S1) {
+	this->S = S1;
+}
+
+string figur2d::get_type2d() {
+	return this->type;
+}
+float* figur2d::get_sizes2d() {
+	float* a1 = new float[3];
+	a1[0] = this->a;
+	a1[1] = this->b;
+	a1[2] = this->c;
+	return a1;
+
+}
+float figur2d::get_S() {
+	return this->S;
+}
+
+void figur2d::draw() {
+	
+	HWND handle = FindWindowA("ConsoleWindowClass", NULL);
+	HDC hdc = GetDC(handle);
+	//создаём контур
+	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(100, 200, 0)); //сплошная линия, толщиной 10 пикселей
+	SelectObject(hdc, hPen);// указываем перо 
+	//заливка
+	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
+	SelectObject(hdc, hBrush);
+	if (this->type == "Круг") {
+		float r = this->a;
+		Ellipse(hdc, 800, 100, 800 + 2 * r, 100 + 2 * r);
+	}
+	else if(this->type == "Прямоугольник") {
+		Rectangle(hdc, 800, 100, 800 + b, 100 + a);
+	}
+	else if (this->type == "Прямоугольный треугольник") {
+		MoveToEx(hdc, 800, 100, NULL);
+		LineTo(hdc, 800, 100 + a);
+		LineTo(hdc, 800 + b, 100 + a);
+		LineTo(hdc, 800, 100);
+	}
+}
+
+int figur2d::edit_inf() {
+
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	string type1;
+	float a1, b1, c1;
+
+	cout << "Выберите информацию для изменения:" << endl;
+	cout << "1. Тип и размеры" << endl;
+	cout << "2. Размеры" << endl;
+	cout << "0. Выход" << endl;
+	char c;
+	while (1) {
+		switch (c = _getch()) {
+		case '1':
+			cout << "Введите новый тип (помните, что вы можете создать только три типа фигур: круг, прямоугольник и прямоугольный треугольник): " << endl;
+			getline(cin, type1);
+			if (type1 == "Круг") {
+				set_type2d(type1);
+				cout << "Введите радиус: " << endl;
+				cin >> a1;
+				set_sizes2d(a1, 0, 0);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else if (type1 == "Прямоугольник") {
+				set_type2d(type1);
+				cout << "Введите ширину: " << endl;
+				cin >> a1;
+				cout << "Введите длину: " << endl;
+				cin >> b1;
+				set_sizes2d(a1, b1, 0);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else if (type1 == "Прямоугольный треугольник") {
+				set_type2d(type1);
+				cout << "Введите катет 1: " << endl;
+				cin >> a1;
+				cout << "Введите катет 2: " << endl;
+				cin >> b1;
+				cout << "Введите гипотенузу: " << endl;
+				cin >> c1;
+				set_sizes2d(a1, b1, c1);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else {
+				cout << "Такого типа не существует." << endl;
+			}
+			break;
+		case '2':
+			if (this->type == "Круг") {
+				cout << "Введите радиус: " << endl;
+				cin >> a1;
+				set_sizes2d(a1, 0, 0);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else if (this->type == "Прямоугольник") {
+				cout << "Введите ширину: " << endl;
+				cin >> a1;
+				cout << "Введите длину: " << endl;
+				cin >> b1;
+				set_sizes2d(a1, b1, 0);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else if (this->type == "Прямоугольный треугольник") {
+				cout << "Введите катет 1: " << endl;
+				cin >> a1;
+				cout << "Введите катет 2: " << endl;
+				cin >> b1;
+				cout << "Введите гипотенузу: " << endl;
+				cin >> c1;
+				set_sizes2d(a1, b1, c1);
+				cout << "Данные успешно изменены" << endl;
+			}
+			else {
+				cout << "Такого типа не существует." << endl;
+			}
+			break;
+		case '0':
+			cout << "Выход из редактирования" << endl;
+			return 0;
+		default:
+			cout << "Такой команды не существует." << endl;
+			break;
+		}
+	}
+}

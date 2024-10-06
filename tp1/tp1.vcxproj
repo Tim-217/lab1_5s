@@ -135,6 +135,7 @@
     <ClCompile Include="..\тп\тп\2d.cpp" />
     <ClCompile Include="..\тп\тп\3d.cpp" />
     <ClCompile Include="..\тп\тп\figur.cpp" />
+    <ClCompile Include="..\тп\тп\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
