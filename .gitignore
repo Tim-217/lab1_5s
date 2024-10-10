@@ -1,6 +1,6 @@
+*.sln
+*.vcxproj
 x64/
 .vs/
 *.filters
 *.user
-*.sln
-*.vcxproj
