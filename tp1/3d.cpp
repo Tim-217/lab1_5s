@@ -1,4 +1,5 @@
 #include "3d.h"
+#include "check.h"
 #include <windows.h>
 #include <conio.h>
 
@@ -18,7 +19,6 @@ void figur3d::set_type3d(string t) {
 void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 	float v;
 	if (a1 > 0 && b1 == 0 && c1 == 0 && h1 == 0) {
-		this->type = "Шар";
 		v = 3.14 * a1 * a1 * a1 * 4 / 3;
 		this->set_V(v);
 		this->a = a1;
@@ -27,7 +27,6 @@ void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 		this->h = h1;
 	}
 	else if (a1 > 0 && b1 > 0 && c1 > 0 && h1 == 0) {
-		this->type = "Параллелепипед";
 		v = a1 * b1 * c1;
 		this->set_V(v);
 		this->a = a1;
@@ -36,7 +35,6 @@ void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 		this->h = h1;
 	}
 	else if (a1 > 0 && b1 > 0 && c1 > 0 && h1 > 0) {
-		this->type = "Прямоугольная пирамида";
 		v = (a1 * b1) * h1 / 6;
 		this->set_V(v);
 		float d = 0.001;
@@ -50,7 +48,7 @@ void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 		}
 		else
 		{
-			cout << "Обнаружена ошибка. Параметр одной из сторон был исправлен." << endl;
+			cout << "Обнаружена ошибка. Параметр одной из сторон был исправлен: cторона с (гипотенуза) теперь равна:" << c2 << endl;
 			this->a = a1;
 			this->b = b1;
 			this->c = c2;
@@ -105,7 +103,28 @@ void figur3d::draw() {
 		LineTo(hdc, 700, 100);
 	}
 }
-
+void figur3d::print() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	cout << "Тип: " << this->type << endl;
+	float* p = new float[4];
+	p = this->get_sizes3d();
+	if (this->type == "Шар")
+		cout << "Радиус: " << p[0] << endl;
+	if (this->type == "Параллелепипед") {
+		cout << "Ширина: " << p[0] << endl;
+		cout << "Длина: " << p[1] << endl;
+		cout << "Высота: " << p[2] << endl;
+	}
+	if (this->type == "Прямоугольная пирамида") {
+		cout << "Катет 1: " << p[0] << endl;
+		cout << "Катет 2: " << p[1] << endl;
+		cout << "Гипотенуза: " << p[2] << endl;
+		cout << "Высота: " << p[4] << endl;
+	}
+	cout << "Объём: " << this->V << endl;
+	this->draw();
+}
 int figur3d::edit_inf() {
 
 	SetConsoleCP(1251);
@@ -127,31 +146,31 @@ int figur3d::edit_inf() {
 			if (type1 == "Шар") {
 				set_type3d(type1);
 				cout << "Введите радиус: " << endl;
-				cin >> a1;
+				a1 = check();
 				set_sizes3d(a1, 0, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Параллелепипед") {
 				set_type3d(type1);
 				cout << "Введите ширину: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите длину: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите высоту: " << endl;
-				cin >> c1;
+				c1 = check();
 				set_sizes3d(a1, b1, c1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Прямоугольная пирамида") {
 				set_type3d(type1);
 				cout << "Введите катет 1: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите катет 2: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите гипотенузу: " << endl;
-				cin >> c1;
+				c1 = check();
 				cout << "Введите высоту: " << endl;
-				cin >> h1;
+				h1 = check();
 				set_sizes3d(a1, b1, c1, h1);
 				cout << "Данные успешно изменены" << endl;
 			}
@@ -162,29 +181,29 @@ int figur3d::edit_inf() {
 		case '2':
 			if (this->type == "Шар") {
 				cout << "Введите радиус: " << endl;
-				cin >> a1;
+				a1 = check();
 				set_sizes3d(a1, 0, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Параллелепипед") {
 				cout << "Введите ширину: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите длину: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите высоту: " << endl;
-				cin >> c1;
+				c1 = check();
 				set_sizes3d(a1, b1, c1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Прямоугольная пирамида") {
 				cout << "Введите катет 1: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите катет 2: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите гипотенузу: " << endl;
-				cin >> c1;
+				c1 = check();
 				cout << "Введите высоту: " << endl;
-				cin >> h1;
+				h1 = check();
 				set_sizes3d(a1, b1, c1, h1);
 			}
 			else {

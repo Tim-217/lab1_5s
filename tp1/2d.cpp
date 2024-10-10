@@ -1,4 +1,5 @@
 #include "2d.h"
+#include "check.h"
 #include <conio.h>
 #include <windows.h>
 
@@ -17,16 +18,14 @@ void figur2d::set_type2d(string t) {
 
 void figur2d::set_sizes2d(float a1, float b1, float c1) {
 	float s;
-	if (a1 > 0 && b1 == 0 && c1 == 0) {
-		this->type = "Круг"; 
+	if (a1 > 0 && b1 == 0 && c1 == 0) { 
 		s = 3.14 * a1 * a1;
 		this->set_S(s);
 		this->a = a1;
 		this->b = b1;
 		this->c = c1;
 	}	
-	else if (a1 > 0 && b1 > 0 && c1 == 0) { 
-		this->type = "Прямоугольник"; 
+	else if (a1 > 0 && b1 > 0 && c1 == 0) {  
 		s = a1 * b1;
 		this->set_S(s);
 		this->a = a1;
@@ -34,7 +33,6 @@ void figur2d::set_sizes2d(float a1, float b1, float c1) {
 		this->c = c1;
 	}
 	else if (a1 > 0 && b1 > 0 && c1 > 0) { 
-		this->type = "Прямоугольный треугольник";
 		s = (a*b)/2;
 		this->set_S(s);
 		float d = 0.001;
@@ -47,7 +45,7 @@ void figur2d::set_sizes2d(float a1, float b1, float c1) {
 		}
 		else
 		{
-			cout << "Обнаружена ошибка. Параметр одной из сторон был исправлен." << endl;
+			cout << "Обнаружена ошибка. Параметр одной из сторон был исправлен: cторона с (гипотенуза) теперь равна:" << c2 << endl;
 			this->a = a1;
 			this->b = b1;
 			this->c = c2;
@@ -69,6 +67,7 @@ float* figur2d::get_sizes2d() {
 	a1[0] = this->a;
 	a1[1] = this->b;
 	a1[2] = this->c;
+
 	return a1;
 
 }
@@ -100,9 +99,27 @@ void figur2d::draw() {
 		LineTo(hdc, 800, 100);
 	}
 }
-
+void figur2d::print() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	cout << "Тип: " << this->type << endl;
+	float* p = new float[3];
+	p = this->get_sizes2d();
+	if (this->type == "Круг")
+		cout << "Радиус: " << p[0] << endl;
+	if (this->type == "Прямоугольник") {
+		cout << "Ширина: " << p[0] << endl;
+		cout << "Длина: " << p[1] << endl;
+	}
+	if (this->type == "Прямоугольный треугольник") {
+		cout << "Катет 1: " << p[0] << endl;
+		cout << "Катет 2: " << p[1] << endl;
+		cout << "Гипотенуза: " << p[2] << endl;
+	}
+	cout << "Площадь: " << this->S << endl;
+	this->draw();
+}
 int figur2d::edit_inf() {
-
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
@@ -122,27 +139,27 @@ int figur2d::edit_inf() {
 			if (type1 == "Круг") {
 				set_type2d(type1);
 				cout << "Введите радиус: " << endl;
-				cin >> a1;
+				a1 = check();
 				set_sizes2d(a1, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Прямоугольник") {
 				set_type2d(type1);
 				cout << "Введите ширину: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите длину: " << endl;
-				cin >> b1;
+				b1 = check();
 				set_sizes2d(a1, b1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Прямоугольный треугольник") {
 				set_type2d(type1);
 				cout << "Введите катет 1: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите катет 2: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите гипотенузу: " << endl;
-				cin >> c1;
+				c1 = check();
 				set_sizes2d(a1, b1, c1);
 				cout << "Данные успешно изменены" << endl;
 			}
@@ -153,25 +170,25 @@ int figur2d::edit_inf() {
 		case '2':
 			if (this->type == "Круг") {
 				cout << "Введите радиус: " << endl;
-				cin >> a1;
+				a1 = check();
 				set_sizes2d(a1, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Прямоугольник") {
 				cout << "Введите ширину: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите длину: " << endl;
-				cin >> b1;
+				b1 = check();
 				set_sizes2d(a1, b1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Прямоугольный треугольник") {
 				cout << "Введите катет 1: " << endl;
-				cin >> a1;
+				a1 = check();
 				cout << "Введите катет 2: " << endl;
-				cin >> b1;
+				b1 = check();
 				cout << "Введите гипотенузу: " << endl;
-				cin >> c1;
+				c1 = check();
 				set_sizes2d(a1, b1, c1);
 				cout << "Данные успешно изменены" << endl;
 			}

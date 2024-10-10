@@ -1,3 +1,5 @@
+.sln
+.vcxproj
 x64/
 .vs/
 *.filters

@@ -18,7 +18,8 @@ public:
 	string get_type3d();
 	float* get_sizes3d();
 	float get_V();
-	void draw() override;
 
+	void draw() override;
+	void print() override;
 	int edit_inf() override;
 };

@@ -20,6 +20,7 @@ public:
 	float get_S();
 
 	void draw() override;
+	void print() override;
 	int edit_inf() override;
 
 };
