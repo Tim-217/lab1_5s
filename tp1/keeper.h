@@ -4,14 +4,13 @@
 #include "3d.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <conio.h>
 using namespace std;
-
 struct Element {
     Element* next;
     Figur* data;
 };
-
 class Keeper
 {
 private:
@@ -29,7 +28,6 @@ public:
     Element* get_tail();
     int get_count();
 
-    void delete_head();
     void delete_all();
     Keeper& delete_element(int n);
 
@@ -45,4 +43,8 @@ public:
     friend Keeper& operator--(Keeper& K);
 
     void print_keeper();
+    void print_element(int n);
+
+    void load_from_file(const string& filename);
+    void save_to_file(const string& filename);
 };

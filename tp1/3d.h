@@ -22,4 +22,6 @@ public:
 	void draw() override;
 	void print() override;
 	int edit_inf() override;
+	void load_from_file(istream&) override;
+	void save_to_file(ostream&) override;
 };

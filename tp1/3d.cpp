@@ -3,14 +3,10 @@
 #include <windows.h>
 #include <conio.h>
 
-figur3d::figur3d() :type(""), a(0), b(0), c(0), h(0), V(0) { cout << "Вызван конструктор без параметров для класса figur2d\n"; };
-figur3d::figur3d(const string& t, const float& a1, const float& b1, const float& c1, const float& h1, const float& V1) :type(t), a(a1), b(b1), c(c1), h(h1), V(V1) {
-	cout << "Вызван конструктор с параметрами для класса figur2d\n";
-}
-figur3d::figur3d(const figur3d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), h(tmp.h), V(tmp.V) {
-	cout << "Вызван конструктор копирования для класса figur2d\n";
-}
-figur3d::~figur3d() { cout << "Вызван деструктор  для класса figur2d\n"; }
+figur3d::figur3d() :type(""), a(0), b(0), c(0), h(0), V(0) {};
+figur3d::figur3d(const string& t, const float& a1, const float& b1, const float& c1, const float& h1, const float& V1) :type(t), a(a1), b(b1), c(c1), h(h1), V(V1) {}
+figur3d::figur3d(const figur3d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), h(tmp.h), V(tmp.V) {}
+figur3d::~figur3d() {}
 
 void figur3d::set_type3d(string t) {
 	this->type = t;
@@ -19,6 +15,7 @@ void figur3d::set_type3d(string t) {
 void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 	float v;
 	if (a1 > 0 && b1 == 0 && c1 == 0 && h1 == 0) {
+		this->type = "Шар";
 		v = 3.14 * a1 * a1 * a1 * 4 / 3;
 		this->set_V(v);
 		this->a = a1;
@@ -27,6 +24,7 @@ void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 		this->h = h1;
 	}
 	else if (a1 > 0 && b1 > 0 && c1 > 0 && h1 == 0) {
+		this->type = "Параллелепипед";
 		v = a1 * b1 * c1;
 		this->set_V(v);
 		this->a = a1;
@@ -35,12 +33,12 @@ void figur3d::set_sizes3d(float a1, float b1, float c1, float h1) {
 		this->h = h1;
 	}
 	else if (a1 > 0 && b1 > 0 && c1 > 0 && h1 > 0) {
-		v = (a1 * b1) * h1 / 6;
+		this->type = "Прямоугольная пирамида";
+		v = a1 * b1 * h1 / 6;
 		this->set_V(v);
 		float d = 0.001;
 		float c2 = sqrt(b1 * b1 + a1 * a1);
 		if (abs(c2 - c1) < d) {
-			cout << "Всё верно" << endl;
 			this->a = a1;
 			this->b = b1;
 			this->c = c1;
@@ -80,7 +78,6 @@ float figur3d::get_V() {
 }
 
 void figur3d::draw() {
-
 	HWND handle = FindWindowA("ConsoleWindowClass", NULL);
 	HDC hdc = GetDC(handle);
 	//создаём контур
@@ -91,16 +88,16 @@ void figur3d::draw() {
 	SelectObject(hdc, hBrush);
 	if (this->type == "Шар") {
 		float r = this->a;
-		Ellipse(hdc, 700, 100, 700 + 2 * r, 100 + 2 * r);		
+		Ellipse(hdc, 650, 300, 650 + 2 * r, 300 + 2 * r);
 	}
 	else if (this->type == "Параллелепипед") {
-		Rectangle(hdc, 700, 100, 700 + b, 100 + a);
+		Rectangle(hdc, 650, 300, 650 + b, 300 + a);
 	}
 	else if (this->type == "Прямоугольная пирамида") {
-		MoveToEx(hdc, 700, 100, NULL);
-		LineTo(hdc, 700, 100 + h);
-		LineTo(hdc, 700 + b, 100 + h);
-		LineTo(hdc, 700, 100);
+		MoveToEx(hdc, 650, 300, NULL);
+		LineTo(hdc, 650, 300 + h);
+		LineTo(hdc, 650 + b, 300 + h);
+		LineTo(hdc, 650, 300);
 	}
 }
 void figur3d::print() {
@@ -123,16 +120,12 @@ void figur3d::print() {
 		cout << "Высота: " << p[4] << endl;
 	}
 	cout << "Объём: " << this->V << endl;
-	this->draw();
 }
 int figur3d::edit_inf() {
-
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-
 	string type1;
 	float a1, b1, c1, h1;
-
 	cout << "Выберите информацию для изменения:" << endl;
 	cout << "1. Тип и размеры" << endl;
 	cout << "2. Размеры" << endl;
@@ -141,35 +134,36 @@ int figur3d::edit_inf() {
 	while(1){
 		switch (c = _getch()) {
 		case '1':
-			cout << "Введите новый тип (помните, что вы можете создать только три типа объёмных фигур: шар, прараллелепипед и прямоугольную пирамиду): ";
+			cout << "Помните, что вы можете создать только три типа объёмных фигур: шар, прараллелепипед и прямоугольную пирамиду" << endl;
+			cout << "Введите новый тип: ";
 			getline(cin, type1);
 			if (type1 == "Шар") {
 				set_type3d(type1);
-				cout << "Введите радиус: " << endl;
+				cout << "Введите радиус: ";
 				a1 = check();
 				set_sizes3d(a1, 0, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Параллелепипед") {
 				set_type3d(type1);
-				cout << "Введите ширину: " << endl;
+				cout << "Введите ширину: ";
 				a1 = check();
-				cout << "Введите длину: " << endl;
+				cout << "Введите длину: ";
 				b1 = check();
-				cout << "Введите высоту: " << endl;
+				cout << "Введите высоту: ";
 				c1 = check();
 				set_sizes3d(a1, b1, c1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (type1 == "Прямоугольная пирамида") {
 				set_type3d(type1);
-				cout << "Введите катет 1: " << endl;
+				cout << "Введите катет 1: ";
 				a1 = check();
-				cout << "Введите катет 2: " << endl;
+				cout << "Введите катет 2: ";
 				b1 = check();
-				cout << "Введите гипотенузу: " << endl;
+				cout << "Введите гипотенузу: ";
 				c1 = check();
-				cout << "Введите высоту: " << endl;
+				cout << "Введите высоту: ";
 				h1 = check();
 				set_sizes3d(a1, b1, c1, h1);
 				cout << "Данные успешно изменены" << endl;
@@ -180,31 +174,32 @@ int figur3d::edit_inf() {
 			break;
 		case '2':
 			if (this->type == "Шар") {
-				cout << "Введите радиус: " << endl;
+				cout << "Введите радиус: ";
 				a1 = check();
 				set_sizes3d(a1, 0, 0, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Параллелепипед") {
-				cout << "Введите ширину: " << endl;
+				cout << "Введите ширину: ";
 				a1 = check();
-				cout << "Введите длину: " << endl;
+				cout << "Введите длину: ";
 				b1 = check();
-				cout << "Введите высоту: " << endl;
+				cout << "Введите высоту: ";
 				c1 = check();
 				set_sizes3d(a1, b1, c1, 0);
 				cout << "Данные успешно изменены" << endl;
 			}
 			else if (this->type == "Прямоугольная пирамида") {
-				cout << "Введите катет 1: " << endl;
+				cout << "Введите катет 1: ";
 				a1 = check();
-				cout << "Введите катет 2: " << endl;
+				cout << "Введите катет 2: ";
 				b1 = check();
-				cout << "Введите гипотенузу: " << endl;
+				cout << "Введите гипотенузу: ";
 				c1 = check();
-				cout << "Введите высоту: " << endl;
+				cout << "Введите высоту: ";
 				h1 = check();
 				set_sizes3d(a1, b1, c1, h1);
+				cout << "Данные успешно изменены" << endl;
 			}
 			else {
 				cout << "Такого типа не существует." << endl;
@@ -219,4 +214,11 @@ int figur3d::edit_inf() {
 		}
 	}
 	
+}
+void figur3d::load_from_file(istream& in) {
+	in >> a >> b >> c >> h;
+	this->set_sizes3d(a, b, c, h);
+}
+void figur3d::save_to_file(ostream& out) {
+	out << "3d\n" << a << ' ' << b << ' ' << c << ' ' << h << '\n';
 }
