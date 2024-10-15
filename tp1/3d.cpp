@@ -3,10 +3,14 @@
 #include <windows.h>
 #include <conio.h>
 
-figur3d::figur3d() :type(""), a(0), b(0), c(0), h(0), V(0) {};
-figur3d::figur3d(const string& t, const float& a1, const float& b1, const float& c1, const float& h1, const float& V1) :type(t), a(a1), b(b1), c(c1), h(h1), V(V1) {}
-figur3d::figur3d(const figur3d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), h(tmp.h), V(tmp.V) {}
-figur3d::~figur3d() {}
+figur3d::figur3d() :type(""), a(0), b(0), c(0), h(0), V(0) { cout << "Вызван конструктор класса figur3d\n"; };
+figur3d::figur3d(const string& t, const float& a1, const float& b1, const float& c1, const float& h1, const float& V1) :type(t), a(a1), b(b1), c(c1), h(h1), V(V1) {
+	cout << "Вызван конструктор с параметрами класса figur3d\n";
+}
+figur3d::figur3d(const figur3d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), h(tmp.h), V(tmp.V) {
+	cout << "Вызван конструктор копирования класса figur3d\n";
+}
+figur3d::~figur3d() { cout << "Вызван деструктор класса figur3d\n"; }
 
 void figur3d::set_type3d(string t) {
 	this->type = t;

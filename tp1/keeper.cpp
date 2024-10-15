@@ -2,10 +2,10 @@
 #include "check.h"
 #include <windows.h>
 
-Keeper::Keeper() : head(nullptr), tail(nullptr), count(0) {}
-Keeper::Keeper(Element* h, Element* t, int c) : head(h), tail(t), count(c) {}
-Keeper::Keeper(Keeper& other) : head(other.head), tail(other.tail), count(other.count) {}
-Keeper::~Keeper() { delete_all(); }
+Keeper::Keeper() : head(nullptr), tail(nullptr), count(0) { cout << "Вызван конструктор класса Keeper\n"; }
+Keeper::Keeper(Element* h, Element* t, int c) : head(h), tail(t), count(c) { cout << "Вызван конструктор с параметрами класса Keeper\n"; }
+Keeper::Keeper(Keeper& other) : head(other.head), tail(other.tail), count(other.count) { cout << "Вызван конструктор копирования класса Keeper\n"; }
+Keeper::~Keeper() { cout << "Вызван деструктор класса Keeper\n"; delete_all(); }
 
 Element* Keeper::get_head() {
     return this->head;

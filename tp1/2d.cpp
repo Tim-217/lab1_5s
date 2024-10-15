@@ -3,10 +3,12 @@
 #include <conio.h>
 #include <windows.h>
 
-figur2d::figur2d() :type(""), a(0), b(0), c(0), S(0) {};
-figur2d::figur2d(const string& t, const float& a1, const float& b1, const float& c1, const float& S1) :type(t), a(a1), b(b1), c(c1), S(S1){}
-figur2d::figur2d(const figur2d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), S(tmp.S) {}
-figur2d::~figur2d() {}
+figur2d::figur2d() :type(""), a(0), b(0), c(0), S(0) { cout << "Вызван конструктор класса figur2d\n"; };
+figur2d::figur2d(const string& t, const float& a1, const float& b1, const float& c1, const float& S1) :type(t), a(a1), b(b1), c(c1), S(S1){ 
+	cout << "Вызван конструктор c параметрами класса figur2d\n"; }
+figur2d::figur2d(const figur2d& tmp) : type(tmp.type), a(tmp.a), b(tmp.b), c(tmp.c), S(tmp.S) { 
+	cout << "Вызван конструктор копирования класса figur2d\n"; }
+figur2d::~figur2d() { cout << "Вызван деструктор класса figur2d\n"; }
 
 void figur2d::set_type2d(string t) {
 	this->type = t;
